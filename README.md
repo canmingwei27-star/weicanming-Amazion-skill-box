@@ -107,9 +107,66 @@ Prompt 保持易复制、易修改；不写死没有依据的产品结论，也�
 
 ---
 
+## 调用方式与平台范围
+
+本 Skill 只有一个支持平台：**Amazon（亚马逊）**。
+
+支持精确调用，也支持模糊调用。以下说法都会调用当前的亚马逊评论分析 Skill：
+
+- `调用评论分析 skill`
+- `评论分析`
+- `亚马逊评论分析`
+- `买家评论分析`
+- `review analysis`
+- `Amazon review analysis`
+
+当用户只说“评论分析”而没有指定平台时，默认按 Amazon 处理，不要求用户输入完整的 `amazon-review-analysis` 名称。
+
+如果用户明确指定其他平台，则不将其他平台误当作 Amazon 处理；应说明当前 Skill 仅支持 Amazon。
+
+---
+
+## Amazon 根 Skill 与子 Skill 目录
+
+仓库中的 `amazon-skill-router` 是 Amazon Skill 的根入口，负责根据用户意图查询目录并选择子 Skill。当前子 Skill 包括：
+
+| Skill | 功能 |
+| --- | --- |
+| `amazon-skill-router` | 识别精确或模糊调用词，查询 Amazon 子 Skill 目录并路由请求 |
+| `amazon-review-analysis` | 分析 Amazon 买家评论，按频次与严重性整理优缺点并提出有依据的建议 |
+
+以下说法会调用根 Skill：
+
+- `调用 skill`
+- `调用亚马逊 skill`
+- `调用亚马逊技能`
+- `选择合适的 skill`
+- `帮我找需要调用的 skill`
+
+根 Skill 会把 `评论分析`、`调用评论分析 skill`、`亚马逊评论分析` 等说法路由到 `amazon-review-analysis`。当前目录只有 Amazon 平台，不会把其他平台的请求误路由到 Amazon Skill。
+
+新增子 Skill 时，只追加新的目录、清单项和 README 表格行，不删除原有内容。
+
+---
+
+## 新环境同步
+
+本仓库同时作为本地 Skill 配置的备份源。新环境可在仓库目录执行：
+
+```bash
+python scripts/sync_skills.py
+```
+
+同步脚本会读取 `skills-manifest.json`，自动发现并安装仓库中登记的 Skill。默认只新增缺失的 Skill，不删除或覆盖本地已有内容；如需更新已有 Skill，必须显式使用 `--force`，且脚本会先创建备份。
+
+同步完成后，新环境会得到根 Skill `amazon-skill-router` 以及清单中登记的 Amazon 子 Skill。
+
+---
+
 ## 分析限制
 
 - 没有评分字段时，不推断评分分布；情感只能从评论文本描述。
 - 样本很小时，一两条评论就能显著改变占比，避免给出宽泛结论。
 - 缺少评论 ID 时无法确认重复，重复行会被标记而非删除。
 - 竞品对比、买家画像、市场结论等评论无法证实的内容，一律标为 unknown / 需要更多证据。
+
