@@ -92,24 +92,49 @@ def sync_skill(repo_root: Path, entry: dict, target_root: Path, force: bool, bac
     return f"SYNCED: {name}"
 
 
+def sync_from_repository(repo_root: Path, target_root: Path, force: bool) -> None:
+    manifest_path = repo_root / "skills-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("platform") != "amazon":
+        raise RuntimeError("This skill box is restricted to the Amazon platform")
+    backup_root = target_root / ".skill-backups"
+    for entry in manifest.get("skills", []):
+        print(sync_skill(repo_root, entry, target_root, force, backup_root))
+
+
+def find_local_repository() -> Path | None:
+    candidates = [Path.cwd(), Path(__file__).resolve().parents[1]]
+    for candidate in candidates:
+        if (candidate / "skills-manifest.json").is_file():
+            return candidate
+    return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--target", type=Path, default=default_target())
     parser.add_argument("--repository", default=REPOSITORY)
     parser.add_argument("--ref", default="main")
+    parser.add_argument(
+        "--source",
+        choices=["auto", "local", "remote"],
+        default="auto",
+        help="Use the checked-out repository when available, or download the GitHub backup",
+    )
     parser.add_argument("--force", action="store_true", help="Back up and update existing skills")
     args = parser.parse_args()
 
     args.target.mkdir(parents=True, exist_ok=True)
+    local_repository = find_local_repository() if args.source in {"auto", "local"} else None
+    if args.source == "local" and local_repository is None:
+        raise RuntimeError("Local repository not found; run from the skill-box checkout")
+    if local_repository is not None:
+        sync_from_repository(local_repository, args.target, args.force)
+        return 0
+
     with tempfile.TemporaryDirectory(prefix="codex-skill-sync-") as temporary:
         repo_root = download_repository(args.repository, args.ref, Path(temporary))
-        manifest_path = repo_root / "skills-manifest.json"
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        if manifest.get("platform") != "amazon":
-            raise RuntimeError("This skill box is restricted to the Amazon platform")
-        backup_root = args.target / ".skill-backups"
-        for entry in manifest.get("skills", []):
-            print(sync_skill(repo_root, entry, args.target, args.force, backup_root))
+        sync_from_repository(repo_root, args.target, args.force)
     return 0
 
 
