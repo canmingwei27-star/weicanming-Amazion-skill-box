@@ -1,21 +1,39 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "platform": "amazon",
   "repository": "https://github.com/canmingwei27-star/weicanming-Amazion-skill-box.git",
   "ref": "main",
+  "routing_policy": [
+    "An explicitly named skill wins over fuzzy matching.",
+    "Otherwise route only when one skill is a clear semantic match.",
+    "If no skill matches or multiple skills are equally plausible, ask a focused clarification question.",
+    "Use multiple skills only when the user requests combined work or the requested tasks are clearly independent.",
+    "Read this compact catalog first; load only the selected skill's SKILL.md and its referenced material."
+  ],
+  "router": {
+    "name": "amazon-skill-router",
+    "path": "amazon-skill-router",
+    "include": ["SKILL.md", "references"],
+    "description": "Route Amazon requests to the best matching child skill."
+  },
   "skills": [
     {
       "name": "amazon-review-analysis",
       "path": "skill库/评论分析/amazon-review-analysis",
+      "category": "评论分析",
       "include": ["SKILL.md"],
-      "description": "Analyze Amazon buyer reviews and generate evidence-grounded product insights."
-    },
-    {
-      "name": "amazon-skill-router",
-      "path": "amazon-skill-router",
-      "include": ["SKILL.md", "references"],
-      "description": "Route fuzzy Amazon requests to the correct child skill."
+      "description": "Analyze Amazon buyer reviews and generate evidence-grounded product insights.",
+      "triggers": [
+        "评论分析",
+        "亚马逊评论分析",
+        "买家评论分析",
+        "review analysis",
+        "Amazon buyer reviews",
+        "review strengths and weaknesses"
+      ],
+      "excludes": [
+        "Review analysis for a platform explicitly identified as non-Amazon"
+      ]
     }
   ]
 }
-

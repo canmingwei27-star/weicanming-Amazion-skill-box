@@ -126,39 +126,18 @@ Prompt 保持易复制、易修改；不写死没有依据的产品结论，也�
 
 ---
 
-## Amazon 根 Skill 与子 Skill 目录
+## Amazon Skill 根入口与子 Skill
 
-仓库中的 `amazon-skill-router` 是 Amazon Skill 的根入口，负责根据用户意图查询目录并选择子 Skill。当前子 Skill 包括：
+`amazon-skill-router` 是根入口，按用户意图选择一个最匹配的 Amazon 子 Skill。子 Skill 的名称、路径、分类、用途、触发词和排除条件以 `skills-manifest.json` 为唯一来源。
 
-| Skill | 功能 |
-| --- | --- |
-| `amazon-skill-router` | 识别精确或模糊调用词，查询 Amazon 子 Skill 目录并路由请求 |
-| `amazon-review-analysis` | 分析 Amazon 买家评论，按频次与严重性整理优缺点并提出有依据的建议 |
+路由索引 `amazon-skill-router/references/skill-catalog.md` 是从清单生成的紧凑文件。新增或修改子 Skill 时：
 
-仓库目录按“根 Skill → 分类 → 子 Skill”组织：
+1. 将 Skill 放入 `skill库/<分类>/<skill-name>/SKILL.md`。
+2. 在 `skills-manifest.json` 添加或更新对应条目及路由元数据。
+3. 运行 `python scripts/render_skill_catalog.py --write` 重新生成路由索引。
+4. 运行 `python scripts/render_skill_catalog.py --check` 和 `python -m unittest discover -s tests` 验证清单与同步行为。
 
-```text
-amazon-skill-router/
-└─ SKILL.md
-skill库/
-└─ 评论分析/
-   └─ amazon-review-analysis/
-      └─ SKILL.md
-```
-
-以下说法会调用根 Skill：
-
-- `调用 skill`
-- `调用亚马逊 skill`
-- `调用亚马逊技能`
-- `选择合适的 skill`
-- `帮我找需要调用的 skill`
-
-根 Skill 会把 `评论分析`、`调用评论分析 skill`、`亚马逊评论分析` 等说法路由到 `amazon-review-analysis`。当前目录只有 Amazon 平台，不会把其他平台的请求误路由到 Amazon Skill。
-
-新增子 Skill 时，统一放入 `skill库/<分类>/<skill-name>/`，同时追加清单项、路由目录和 README 表格行；不删除原有内容。
-
----
+路由规则：明确指定的 Skill 优先；否则仅在一个 Skill 明显匹配时路由。没有匹配项或多个 Skill 同样可能时，先问一个简短澄清问题。只有用户要求组合任务或任务彼此独立时才串联多个 Skill。
 
 ## 新环境同步
 
@@ -168,7 +147,7 @@ skill库/
 python scripts/sync_skills.py --source auto
 ```
 
-同步脚本会优先读取当前 GitHub 仓库检出目录中的 `skills-manifest.json`，自动发现并安装仓库中登记的 Skill；如果当前目录不是仓库检出目录，则回退到下载 GitHub 备份。默认只新增缺失的 Skill，不删除或覆盖本地已有内容；如需更新已有 Skill，必须显式使用 `--force`，且脚本会先创建备份。
+同步脚本会优先读取当前仓库检出目录中的 `skills-manifest.json`；如果当前目录不是仓库检出目录，则下载 GitHub 备份。默认新增缺失的 Skill，并跳过同名目录。使用 `--force` 时，脚本先完整备份同名目录，再将其替换为清单指定文件；旧版或本地额外文件会从活动目录移除，但保留在备份中。
 
 同步完成后，新环境会得到根 Skill `amazon-skill-router` 以及 `skill库/` 中清单登记的 Amazon 子 Skill。
 
@@ -183,7 +162,7 @@ python scripts/sync_skills.py --source auto
 在环境的启动 Skill 中填写：
 
 ```text
-环境启动时执行 `python scripts/sync_skills.py --source auto`，从当前 GitHub 仓库同步 Amazon Skill。确认 `amazon-skill-router` 和 `amazon-review-analysis` 已可用；如果同步失败，报告失败原因，不删除本地已有 Skill。
+环境启动时执行 `python scripts/sync_skills.py --source auto`，从当前 GitHub 仓库同步 Amazon Skill。确认清单中的 Router 与全部子 Skill 已可用；如果同步失败，报告失败原因，不删除本地已有 Skill。
 ```
 
 保存并发布（或重新发布）环境后，新任务会继承这套同步配置。
@@ -196,4 +175,5 @@ python scripts/sync_skills.py --source auto
 - 样本很小时，一两条评论就能显著改变占比，避免给出宽泛结论。
 - 缺少评论 ID 时无法确认重复，重复行会被标记而非删除。
 - 竞品对比、买家画像、市场结论等评论无法证实的内容，一律标为 unknown / 需要更多证据。
+
 

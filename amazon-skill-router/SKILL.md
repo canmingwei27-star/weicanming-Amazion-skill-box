@@ -1,45 +1,24 @@
 ---
 name: amazon-skill-router
-description: Route exact or fuzzy Amazon requests to the correct child skill by reading the skill catalog. Use for requests such as 调用skill, 调用亚马逊skill, 选择亚马逊技能, or when the user describes a task without naming a skill. Amazon is the only supported platform.
+description: Route Amazon requests to the best matching child skill. Use when the user asks to call or choose an Amazon skill, or describes an Amazon task without naming a skill.
 ---
 
 # Amazon Skill Router
 
-This is the entry-point skill for the skill box. Use it to decide which Amazon child skill should handle the user's request.
+Use this root skill to select the right Amazon child skill.
 
-## Platform boundary
+## Routing
 
-This skill box supports Amazon only. If the user does not name a platform, interpret the request as Amazon. If the user explicitly names another platform, do not route the request to an Amazon child skill; state that only Amazon is supported.
+1. Read the compact index in [references/skill-catalog.md](references/skill-catalog.md).
+2. If the user names a child skill, select it directly.
+3. Otherwise, match the request to the catalog by intent, triggers, and exclusions.
+4. If one child skill is a clear match, load only that child's `SKILL.md` and follow it.
+5. If none match, explain the closest available capability and ask what they want to do.
+6. If multiple skills are equally plausible, ask one focused question instead of guessing.
+7. Use multiple child skills only when the user asks for combined work or the requested tasks are clearly independent.
 
-## Routing workflow
+An explicit skill name takes priority over fuzzy matches. Preserve the user's language. Amazon is the only supported platform; do not route an explicitly non-Amazon task to an Amazon skill.
 
-1. Read [references/skill-catalog.md](references/skill-catalog.md), which records each child skill's category and repository path under `skill库/`.
-2. Match the user's intent to the child skill whose capability best fits the request. Match meaning, not exact wording.
-3. If the user explicitly names a child skill, use that child skill.
-4. If the user uses a fuzzy request such as “调用评论分析 skill”, route it to `amazon-review-analysis`.
-5. If no child skill matches, explain which Amazon capability is currently available and ask for the missing input or a new skill request.
+## Updating the catalog
 
-## Fuzzy invocation rules
-
-Treat these as calls to the router:
-
-- `调用 skill`
-- `调用亚马逊 skill`
-- `调用亚马逊技能`
-- `选择合适的 skill`
-- `帮我找需要调用的 skill`
-
-Treat these as calls to the Amazon review-analysis child skill:
-
-- `评论分析`
-- `调用评论分析 skill`
-- `亚马逊评论分析`
-- `买家评论分析`
-- `review analysis`
-
-The user does not need to provide an exact `$skill-name`. Preserve the user's requested language and follow the selected child skill's output rules.
-
-## Catalog maintenance
-
-When a new child skill is added, place it under `skill库/<category>/<skill-name>/`, add the same path to `skills-manifest.json`, add its routing entry to [references/skill-catalog.md](references/skill-catalog.md), and append its description to the repository README. Do not remove or rewrite existing entries without explicit authorization.
-
+The root routing policy and child-skill index are generated from `skills-manifest.json`. Add or edit child skills in that manifest, then run `python scripts/render_skill_catalog.py --write`. Do not edit the generated catalog by hand.
