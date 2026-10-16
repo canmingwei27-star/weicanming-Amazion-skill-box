@@ -13,7 +13,7 @@ This skill box supports Amazon only. If the user does not name a platform, inter
 
 ## Routing workflow
 
-1. Read [references/skill-catalog.md](references/skill-catalog.md).
+1. Read [references/skill-catalog.md](references/skill-catalog.md), which records each child skill's category and repository path under `skill库/`.
 2. Match the user's intent to the child skill whose capability best fits the request. Match meaning, not exact wording.
 3. If the user explicitly names a child skill, use that child skill.
 4. If the user uses a fuzzy request such as “调用评论分析 skill”, route it to `amazon-review-analysis`.
@@ -41,5 +41,5 @@ The user does not need to provide an exact `$skill-name`. Preserve the user's re
 
 ## Catalog maintenance
 
-When a new child skill is added, add it to `skills-manifest.json`, add its routing entry to [references/skill-catalog.md](references/skill-catalog.md), and append its description to the repository README. Do not remove or rewrite existing entries without explicit authorization.
+When a new child skill is added, place it under `skill库/<category>/<skill-name>/`, add the same path to `skills-manifest.json`, add its routing entry to [references/skill-catalog.md](references/skill-catalog.md), and append its description to the repository README. Do not remove or rewrite existing entries without explicit authorization.
 
