@@ -101,7 +101,7 @@ Prompt 保持易复制、易修改；不写死没有依据的产品结论，也�
 
 ## 使用方式
 
-1. 把本文件保存为 `SKILL.md`，放进你的 AI 助手的 skill / 指令目录（例如 `skills/amazon-review-analysis/SKILL.md`，实际路径取决于你用的工具）。
+1. 把本文件保存为 `SKILL.md`，放进你的 AI 助手的 skill / 指令目录（仓库中的标准路径是 `skill库/评论分析/amazon-review-analysis/SKILL.md`，实际安装路径取决于你用的工具）。
 2. 在对话里提供评论表（粘贴或文件），或直接说明"给我一份可复用的分析 Prompt"。
 3. 未指定语言时，报告用中文，有价值的顾客原话保留英文。
 
@@ -135,6 +135,17 @@ Prompt 保持易复制、易修改；不写死没有依据的产品结论，也�
 | `amazon-skill-router` | 识别精确或模糊调用词，查询 Amazon 子 Skill 目录并路由请求 |
 | `amazon-review-analysis` | 分析 Amazon 买家评论，按频次与严重性整理优缺点并提出有依据的建议 |
 
+仓库目录按“根 Skill → 分类 → 子 Skill”组织：
+
+```text
+amazon-skill-router/
+└─ SKILL.md
+skill库/
+└─ 评论分析/
+   └─ amazon-review-analysis/
+      └─ SKILL.md
+```
+
 以下说法会调用根 Skill：
 
 - `调用 skill`
@@ -145,7 +156,7 @@ Prompt 保持易复制、易修改；不写死没有依据的产品结论，也�
 
 根 Skill 会把 `评论分析`、`调用评论分析 skill`、`亚马逊评论分析` 等说法路由到 `amazon-review-analysis`。当前目录只有 Amazon 平台，不会把其他平台的请求误路由到 Amazon Skill。
 
-新增子 Skill 时，只追加新的目录、清单项和 README 表格行，不删除原有内容。
+新增子 Skill 时，统一放入 `skill库/<分类>/<skill-name>/`，同时追加清单项、路由目录和 README 表格行；不删除原有内容。
 
 ---
 
@@ -159,7 +170,7 @@ python scripts/sync_skills.py
 
 同步脚本会读取 `skills-manifest.json`，自动发现并安装仓库中登记的 Skill。默认只新增缺失的 Skill，不删除或覆盖本地已有内容；如需更新已有 Skill，必须显式使用 `--force`，且脚本会先创建备份。
 
-同步完成后，新环境会得到根 Skill `amazon-skill-router` 以及清单中登记的 Amazon 子 Skill。
+同步完成后，新环境会得到根 Skill `amazon-skill-router` 以及 `skill库/` 中清单登记的 Amazon 子 Skill。
 
 ---
 
