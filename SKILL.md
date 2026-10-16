@@ -1,11 +1,25 @@
 ---
 name: amazon-review-analysis
-description: Analyze Amazon buyer reviews or create a reusable review-analysis prompt, grouping product strengths and weaknesses by frequency. Use for pasted review tables or review files, especially US marketplace product research.
+description: Analyze Amazon buyer reviews or create a reusable review-analysis prompt, grouping product strengths and weaknesses by frequency. Automatically apply to exact or fuzzy requests such as 评论分析, 调用评论分析 skill, 亚马逊评论分析, 买家评论分析, or review analysis. Amazon is the only supported platform.
 ---
 
 # Amazon Review Analysis
 
 Use this skill when the user provides Amazon buyer reviews for analysis, asks for a reusable AI prompt to analyze reviews, or requests product-development insights grounded in review feedback. Follow the user's requested language; otherwise, report in Chinese and preserve useful customer wording in English when appropriate.
+
+## Invocation and platform scope
+
+Treat the following as calls to this skill, even when the user does not use the exact skill name:
+
+- `调用评论分析 skill`
+- `评论分析`
+- `亚马逊评论分析`
+- `买家评论分析`
+- `review analysis` or `Amazon review analysis`
+
+If the user asks for “评论分析” without naming a platform, interpret it as Amazon because Amazon is the only platform supported by this skill and this skill box. Do not require the user to say `$amazon-review-analysis`.
+
+If the user explicitly names another platform, do not silently analyze it with this skill. State that the current skill supports Amazon only and ask the user to provide Amazon review data or a separately supported platform skill.
 
 ## Input format
 
@@ -69,3 +83,4 @@ When asked for a copy-ready prompt, make it usable with a pasted table or upload
 - return an executive summary, categorized strengths and weaknesses, priority improvements, and product-development opportunities.
 
 Keep the prompt easy to copy and edit. Do not hard-code unsupported product claims or instruct the model to scrape Amazon or access reviews the user has not supplied.
+
