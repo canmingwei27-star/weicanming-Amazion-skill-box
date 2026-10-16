@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "platform": "amazon",
+  "repository": "https://github.com/canmingwei27-star/weicanming-Amazion-skill-box.git",
+  "ref": "main",
+  "skills": [
+    {
+      "name": "amazon-review-analysis",
+      "path": ".",
+      "include": ["SKILL.md"],
+      "description": "Analyze Amazon buyer reviews and generate evidence-grounded product insights."
+    },
+    {
+      "name": "amazon-skill-router",
+      "path": "amazon-skill-router",
+      "include": ["SKILL.md", "references"],
+      "description": "Route fuzzy Amazon requests to the correct child skill."
+    }
+  ]
+}
+
