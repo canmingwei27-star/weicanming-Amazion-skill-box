@@ -6,7 +6,7 @@
   "skills": [
     {
       "name": "amazon-review-analysis",
-      "path": ".",
+      "path": "skill库/评论分析/amazon-review-analysis",
       "include": ["SKILL.md"],
       "description": "Analyze Amazon buyer reviews and generate evidence-grounded product insights."
     },
