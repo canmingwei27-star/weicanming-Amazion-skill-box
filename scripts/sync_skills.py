@@ -59,6 +59,9 @@ def copy_entry(source: Path, destination: Path) -> None:
 def sync_skill(repo_root: Path, entry: dict, target_root: Path, force: bool, backup_root: Path) -> str:
     name = entry["name"]
     validate_name(name)
+    repository_path = entry["path"].replace("\\", "/")
+    if name != "amazon-skill-router" and not repository_path.startswith("skill库/"):
+        raise RuntimeError(f"Child skill must be stored under skill库/: {entry['path']}")
     source_root = (repo_root / entry["path"]).resolve()
     target = target_root / name
     if not source_root.is_dir():
