@@ -165,12 +165,28 @@ skill库/
 本仓库同时作为本地 Skill 配置的备份源。新环境可在仓库目录执行：
 
 ```bash
-python scripts/sync_skills.py
+python scripts/sync_skills.py --source auto
 ```
 
-同步脚本会读取 `skills-manifest.json`，自动发现并安装仓库中登记的 Skill。默认只新增缺失的 Skill，不删除或覆盖本地已有内容；如需更新已有 Skill，必须显式使用 `--force`，且脚本会先创建备份。
+同步脚本会优先读取当前 GitHub 仓库检出目录中的 `skills-manifest.json`，自动发现并安装仓库中登记的 Skill；如果当前目录不是仓库检出目录，则回退到下载 GitHub 备份。默认只新增缺失的 Skill，不删除或覆盖本地已有内容；如需更新已有 Skill，必须显式使用 `--force`，且脚本会先创建备份。
 
 同步完成后，新环境会得到根 Skill `amazon-skill-router` 以及 `skill库/` 中清单登记的 Amazon 子 Skill。
+
+### Codex Cloud 默认启动配置
+
+在 Codex Cloud 环境的安装脚本中填写：
+
+```bash
+python scripts/sync_skills.py --source auto
+```
+
+在环境的启动 Skill 中填写：
+
+```text
+环境启动时执行 `python scripts/sync_skills.py --source auto`，从当前 GitHub 仓库同步 Amazon Skill。确认 `amazon-skill-router` 和 `amazon-review-analysis` 已可用；如果同步失败，报告失败原因，不删除本地已有 Skill。
+```
+
+保存并发布（或重新发布）环境后，新任务会继承这套同步配置。
 
 ---
 
