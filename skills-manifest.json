@@ -21,7 +21,7 @@
       "name": "amazon-listing-workflow",
       "path": "skills/amazon-listing-workflow",
       "category": "Listing",
-      "include": ["SKILL.md", "references", "scripts", "agents"],
+      "include": ["SKILL.md", "references", "scripts", "agents", "敏感词-词库.xlsx"],
       "description": "Run the Amazon Listing workflow from intake through copy QA and image planning.",
       "triggers": ["Amazon Listing", "Listing全流程", "标题五点描述QA", "亚马逊Listing"],
       "excludes": ["Image generation alone"]

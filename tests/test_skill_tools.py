@@ -69,6 +69,16 @@ class ManifestTests(unittest.TestCase):
             self.assertEqual(len(backups), 1)
             self.assertEqual(backups[0].read_text(encoding="utf-8"), "old local file")
 
+    def test_listing_install_includes_builtin_wordbook(self):
+        manifest = json.loads((ROOT / "skills-manifest.json").read_text(encoding="utf-8"))
+        entry = next(e for e in manifest["skills"] if e["name"] == "amazon-listing-workflow")
+        filename = "敏感词-词库.xlsx"
+        with tempfile.TemporaryDirectory() as temp:
+            destination = Path(temp) / entry["name"]
+            sync.populate_skill(ROOT, entry, destination)
+            self.assertEqual((destination / filename).read_bytes(),
+                             (ROOT / entry["path"] / filename).read_bytes())
+
     def test_without_force_skips_existing_skill(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

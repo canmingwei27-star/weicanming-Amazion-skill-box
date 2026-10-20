@@ -37,3 +37,7 @@ bullets和qas沿用 [运行约定](run-contract.md)：完整五点为5项，完�
 QA要求10条完整候选，Q≤100、A≤250，均含空格。qas_delivery_mode为review_candidates或verified；每题有source_refs和evidence_status。confirmed要求fact_ids；inferred/unconfirmed要求review_note并在交付中逐条可见。前者允许未确认候选通过机械检查，后者拒绝未确认答案。工具不判断事实真实性、题间语义重复或词根语义适配；副标题无需通过连贯短语检查。
 
 mechanical_passed仅代表已实现的计数、标题顺序、词根字面来源与重复约束通过；不能证明词根目录真实、产品事实成立、品牌禁词合格、语义优先级合适或平台必定接受。ST仍由ST模块单独检查。
+
+## 内置词库检查
+
+按 [资料接收规则](data-intake.md#三违规词库) 加载内置词库及用户补充词库，再检查本次交付的商品文案。记录加载状态、词库版本、有效词条数、被检查字段及命中与修正结果。`check_copy.py` 不读取 Excel 词库，运行它不能代替禁用词检查；内置词库加载失败或仍有未处理命中时，不得标记禁词检查通过。
