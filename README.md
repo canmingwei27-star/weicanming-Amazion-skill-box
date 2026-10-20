@@ -101,7 +101,7 @@ Prompt 保持易复制、易修改；不写死没有依据的产品结论，也�
 
 ## 使用方式
 
-1. 把本文件保存为 `SKILL.md`，放进你的 AI 助手的 skill / 指令目录（仓库中的标准路径是 `skill库/评论分析/amazon-review-analysis/SKILL.md`，实际安装路径取决于你用的工具）。
+1. 把本文件保存为 `SKILL.md`，放进你的 AI 助手的 skill / 指令目录（仓库中的标准路径是 `skills/amazon-review-analysis/SKILL.md`，实际安装路径取决于你用的工具）。
 2. 在对话里提供评论表（粘贴或文件），或直接说明"给我一份可复用的分析 Prompt"。
 3. 未指定语言时，报告用中文，有价值的顾客原话保留英文。
 
@@ -132,7 +132,7 @@ Prompt 保持易复制、易修改；不写死没有依据的产品结论，也�
 
 路由索引 `amazon-skill-router/references/skill-catalog.md` 是从清单生成的紧凑文件。新增或修改子 Skill 时：
 
-1. 将 Skill 放入 `skill库/<分类>/<skill-name>/SKILL.md`。
+1. 将 Skill 放入 `skills/<skill-name>/SKILL.md`。
 2. 在 `skills-manifest.json` 添加或更新对应条目及路由元数据。
 3. 运行 `python scripts/render_skill_catalog.py --write` 重新生成路由索引。
 4. 运行 `python scripts/render_skill_catalog.py --check` 和 `python -m unittest discover -s tests` 验证清单与同步行为。
@@ -149,7 +149,7 @@ python scripts/sync_skills.py --source auto
 
 同步脚本会优先读取当前仓库检出目录中的 `skills-manifest.json`；如果当前目录不是仓库检出目录，则下载 GitHub 备份。默认新增缺失的 Skill，并跳过同名目录。使用 `--force` 时，脚本先完整备份同名目录，再将其替换为清单指定文件；旧版或本地额外文件会从活动目录移除，但保留在备份中。
 
-同步完成后，新环境会得到根 Skill `amazon-skill-router` 以及 `skill库/` 中清单登记的 Amazon 子 Skill。
+同步完成后，新环境会得到根 Skill `amazon-skill-router` 以及 `skills/` 中清单登记的 Amazon 子 Skill。
 
 ### Codex Cloud 默认启动配置
 

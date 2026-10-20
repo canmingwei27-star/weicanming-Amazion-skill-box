@@ -1,5 +1,5 @@
 ---
-name: amazon-image-planner
+name: amazon-image-generation
 description: Amazon Listing and A+ Content image planning plus optional Codex-chat image generation workflow. Use when the user asks Codex to plan Amazon product listing images, A+ module images, ecommerce product image prompts, MAIN/PT01-PT06 galleries, A+L/A+S/A+P/A+M modules, Amazon-compliant image prompts, product-reference image consistency, competitor/ASIN/Sorftime/review-pain-point analysis for image selling points, or to directly generate ecommerce images inside the Codex conversation without a separate API key.
 ---
 

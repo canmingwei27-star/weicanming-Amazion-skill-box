@@ -56,8 +56,8 @@ def load_manifest() -> dict:
         if not skill.get("category") or not skill.get("description") or not skill.get("triggers"):
             raise ValueError(f"Missing routing metadata for {name}")
         skill_root = within(ROOT, skill["path"])
-        if not str(PurePosixPath(skill["path"])).startswith("skill库/"):
-            raise ValueError(f"Child skill must be stored under skill库/: {skill['path']}")
+        if not str(PurePosixPath(skill["path"])).startswith("skills/"):
+            raise ValueError(f"Child skill must be stored under skills/: {skill['path']}")
         if not skill_root.is_dir():
             raise ValueError(f"Missing skill directory: {skill['path']}")
         for relative in skill.get("include", []):

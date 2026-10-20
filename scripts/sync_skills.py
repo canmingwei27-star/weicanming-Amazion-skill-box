@@ -78,8 +78,8 @@ def manifest_entries(manifest: dict) -> list[dict]:
         names.add(name)
         if not entry.get("path") or not isinstance(entry.get("include"), list) or not entry["include"]:
             raise RuntimeError(f"Missing path or include list for {name}")
-        if name != "amazon-skill-router" and not entry["path"].replace("\\", "/").startswith("skill库/"):
-            raise RuntimeError(f"Child skill must be stored under skill库/: {entry['path']}")
+        if name != "amazon-skill-router" and not entry["path"].replace("\\", "/").startswith("skills/"):
+            raise RuntimeError(f"Child skill must be stored under skills/: {entry['path']}")
         if name != "amazon-skill-router":
             if not entry.get("category") or not entry.get("description") or not entry.get("triggers"):
                 raise RuntimeError(f"Missing routing metadata for {name}")

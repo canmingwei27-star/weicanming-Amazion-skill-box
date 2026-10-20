@@ -46,7 +46,7 @@ class ManifestTests(unittest.TestCase):
             root = Path(temp)
             repo = root / "repo"
             target_root = root / "skills"
-            source = repo / "skill库" / "测试" / "example-skill"
+            source = repo / "skills" / "example-skill"
             source.mkdir(parents=True)
             (source / "SKILL.md").write_text("new skill", encoding="utf-8")
             target = target_root / "example-skill"
@@ -54,7 +54,7 @@ class ManifestTests(unittest.TestCase):
             (target / "stale.md").write_text("old local file", encoding="utf-8")
             entry = {
                 "name": "example-skill",
-                "path": "skill库/测试/example-skill",
+                "path": "skills/example-skill",
                 "include": ["SKILL.md"],
             }
 
@@ -77,7 +77,7 @@ class ManifestTests(unittest.TestCase):
             (target / "keep.txt").write_text("keep", encoding="utf-8")
             entry = {
                 "name": "example-skill",
-                "path": "skill库/测试/example-skill",
+                "path": "skills/example-skill",
                 "include": ["SKILL.md"],
             }
             self.assertTrue(sync.sync_skill(repo, entry, target_root, False, target_root / ".skill-backups").startswith("SKIP"))
