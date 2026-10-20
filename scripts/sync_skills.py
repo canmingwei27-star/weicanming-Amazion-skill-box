@@ -6,12 +6,14 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import hashlib
 import os
 from pathlib import Path, PurePosixPath
 import re
 import shutil
 import tempfile
 import urllib.request
+import urllib.error
 import zipfile
 
 
@@ -36,7 +38,9 @@ def download_repository(repository: str, ref: str, destination: Path) -> Path:
     owner, repo = repository.split("/", 1)
     url = f"https://codeload.github.com/{owner}/{repo}/zip/{ref}"
     archive_path = destination / "repository.zip"
-    urllib.request.urlretrieve(url, archive_path)
+    with urllib.request.urlopen(url, timeout=30) as response:
+        with archive_path.open("wb") as output:
+            shutil.copyfileobj(response, output)
     with zipfile.ZipFile(archive_path) as archive:
         safe_extract(archive, destination)
         roots = sorted({PurePosixPath(name).parts[0] for name in archive.namelist() if name})
@@ -153,6 +157,53 @@ def find_local_repository() -> Path | None:
     return None
 
 
+
+def repository_fingerprint(repo_root: Path) -> dict[str, str]:
+    """Compare the manifest and installed skill content, ignoring unrelated files."""
+    manifest_path = repo_root / "skills-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    files = {manifest_path}
+    for entry in manifest_entries(manifest):
+        source_root = within(repo_root, entry["path"])
+        for relative in entry["include"]:
+            source = within(source_root, relative)
+            if not source.exists():
+                raise RuntimeError(f"Missing skill include: {source}")
+            files.update(source.rglob("*")) if source.is_dir() else files.add(source)
+    return {
+        path.relative_to(repo_root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in files if path.is_file()
+    }
+
+
+def sync_selected_source(source: str, local_repository: Path | None,
+                         repository: str, ref: str, target: Path, force: bool) -> None:
+    if source == "local":
+        if local_repository is None:
+            raise RuntimeError("Local repository not found; run from the skill-box checkout")
+        sync_from_repository(local_repository, target, force)
+        return
+
+    print(f"Checking GitHub skill content: {repository}@{ref}")
+    with tempfile.TemporaryDirectory(prefix="codex-skill-sync-") as temporary:
+        try:
+            remote_root = download_repository(repository, ref, Path(temporary))
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
+            if source != "auto" or local_repository is None:
+                raise
+            print(f"WARNING: GitHub check failed ({error}); using local files. "
+                  "Latest remote version is NOT verified.")
+            sync_from_repository(local_repository, target, force)
+            return
+        if source == "auto" and local_repository is not None:
+            if repository_fingerprint(local_repository) == repository_fingerprint(remote_root):
+                print("Local skill content matches GitHub.")
+            else:
+                print("GitHub skill content differs from local files; using GitHub snapshot. "
+                      "Local checkout is unchanged.")
+        sync_from_repository(remote_root, target, force)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--target", type=Path, default=default_target())
@@ -162,21 +213,15 @@ def main() -> int:
         "--source",
         choices=["auto", "local", "remote"],
         default="auto",
-        help="Use the checked-out repository when available, or download the GitHub backup",
+        help="auto: check GitHub first, fall back to local on connection failure; "
+             "local: offline files only; remote: require GitHub",
     )
     parser.add_argument("--force", action="store_true", help="Back up and replace existing skill directories")
     args = parser.parse_args()
 
     local_repository = find_local_repository() if args.source in {"auto", "local"} else None
-    if args.source == "local" and local_repository is None:
-        raise RuntimeError("Local repository not found; run from the skill-box checkout")
-    if local_repository is not None:
-        sync_from_repository(local_repository, args.target, args.force)
-        return 0
-
-    with tempfile.TemporaryDirectory(prefix="codex-skill-sync-") as temporary:
-        repo_root = download_repository(args.repository, args.ref, Path(temporary))
-        sync_from_repository(repo_root, args.target, args.force)
+    sync_selected_source(args.source, local_repository, args.repository,
+                         args.ref, args.target, args.force)
     return 0
 
 

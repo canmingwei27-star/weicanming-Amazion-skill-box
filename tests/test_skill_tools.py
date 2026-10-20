@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
+import urllib.error
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -82,6 +84,45 @@ class ManifestTests(unittest.TestCase):
             }
             self.assertTrue(sync.sync_skill(repo, entry, target_root, False, target_root / ".skill-backups").startswith("SKIP"))
             self.assertTrue((target / "keep.txt").exists())
+
+
+class RemoteSyncTests(unittest.TestCase):
+    def run_sync(self, source="auto", local=ROOT, failure=None):
+        with patch.object(sync.tempfile, "TemporaryDirectory") as temporary, \
+             patch.object(sync, "download_repository") as download, \
+             patch.object(sync, "repository_fingerprint", side_effect=[{"a": "old"}, {"a": "new"}]), \
+             patch.object(sync, "sync_from_repository") as install:
+            temporary.return_value.__enter__.return_value = "snapshot"
+            download.return_value = Path("remote")
+            download.side_effect = failure
+            sync.sync_selected_source(source, local, "owner/repo", "main", Path("target"), False)
+            return download, install
+
+    def test_auto_uses_remote_without_force_overwrite(self):
+        download, install = self.run_sync()
+        download.assert_called_once()
+        install.assert_called_once_with(Path("remote"), Path("target"), False)
+
+    def test_connection_failure_falls_back_to_local(self):
+        _, install = self.run_sync(failure=urllib.error.URLError("offline"))
+        install.assert_called_once_with(ROOT, Path("target"), False)
+
+    def test_remote_failure_does_not_fall_back(self):
+        with self.assertRaises(urllib.error.URLError):
+            self.run_sync(source="remote", failure=urllib.error.URLError("offline"))
+
+    def test_invalid_archive_does_not_fall_back(self):
+        with self.assertRaises(RuntimeError):
+            self.run_sync(failure=RuntimeError("Invalid archive"))
+
+    def test_local_mode_does_not_connect(self):
+        download, install = self.run_sync(source="local")
+        download.assert_not_called()
+        install.assert_called_once_with(ROOT, Path("target"), False)
+
+    def test_auto_without_local_requires_remote(self):
+        with self.assertRaises(urllib.error.URLError):
+            self.run_sync(local=None, failure=urllib.error.URLError("offline"))
 
 
 if __name__ == "__main__":
