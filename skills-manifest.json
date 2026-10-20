@@ -19,7 +19,7 @@
   "skills": [
     {
       "name": "amazon-listing-workflow",
-      "path": "skill库/Listing/amazon-listing-workflow",
+      "path": "skills/amazon-listing-workflow",
       "category": "Listing",
       "include": ["SKILL.md", "references", "scripts", "agents"],
       "description": "Run the Amazon Listing workflow from intake through copy QA and image planning.",
@@ -28,7 +28,7 @@
     },
     {
       "name": "amazon-variant-planning",
-      "path": "skill库/Listing/amazon-variant-planning",
+      "path": "skills/amazon-variant-planning",
       "category": "Listing",
       "include": ["SKILL.md", "references", "scripts", "agents"],
       "description": "Normalize Amazon product variants and bind facts to parent SKUs and MSKUs.",
@@ -37,7 +37,7 @@
     },
     {
       "name": "amazon-image-planning",
-      "path": "skill库/Listing/amazon-image-planning",
+      "path": "skills/amazon-image-planning",
       "category": "Listing",
       "include": ["SKILL.md", "references", "assets", "agents"],
       "description": "Create a fact-grounded nine-image Amazon listing plan without generating images.",
@@ -45,8 +45,8 @@
       "excludes": ["Direct image generation"]
     },
     {
-      "name": "amazon-image-planner",
-      "path": "skill库/图片/amazon-image-planner",
+      "name": "amazon-image-generation",
+      "path": "skills/amazon-image-generation",
       "category": "图片生成",
       "include": ["SKILL.md", "references", "agents"],
       "description": "Generate or plan Amazon listing and A+ images after copy and image planning are complete.",
@@ -55,7 +55,7 @@
     },
     {
       "name": "sellfox-mcp-query",
-      "path": "skill库/赛狐erp调用/sellfox-mcp-query",
+      "path": "skills/sellfox-mcp-query",
       "category": "赛狐ERP调用",
       "include": ["SKILL.md"],
       "description": "Query Sellfox-MCP for scoped Amazon sales and profit data with low-token workflows.",
@@ -73,7 +73,7 @@
     },
     {
       "name": "amazon-review-analysis",
-      "path": "skill库/评论分析/amazon-review-analysis",
+      "path": "skills/amazon-review-analysis",
       "category": "评论分析",
       "include": ["SKILL.md"],
       "description": "Analyze Amazon buyer reviews and generate evidence-grounded product insights.",
