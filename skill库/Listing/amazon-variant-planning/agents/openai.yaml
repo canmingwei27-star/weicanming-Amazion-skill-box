@@ -1,0 +1,3 @@
+interface:
+  display_name: "亚马逊变体资料读取"
+  short_description: "读取颜色尺寸变体表，核对子体规格与包装重量并联动完整文案"

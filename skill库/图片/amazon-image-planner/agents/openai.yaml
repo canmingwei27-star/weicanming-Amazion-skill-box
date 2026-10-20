@@ -1,0 +1,13 @@
+interface:
+  display_name: "Amazon Image Planner"
+  short_description: "Plan Amazon image sets from product, Sorftime, and competitor insights."
+  default_prompt: "Use $amazon-image-planner to research ASIN B0EXAMPLE1 with Sorftime if available, analyze competitor pain points, plan Amazon Listing images, then generate MAIN and PT01."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "sorftime_server"
+      description: "Optional Sorftime MCP tools for Amazon ASIN product detail, product reports, customer sentiment, reviews, variations, and keyword ranking trends."
+
+policy:
+  allow_implicit_invocation: true
