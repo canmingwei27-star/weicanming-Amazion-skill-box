@@ -55,8 +55,8 @@
     },
     {
       "name": "sellfox-mcp-query",
-      "path": "skill库/销售与利润/sellfox-mcp-query",
-      "category": "销售与利润",
+      "path": "skill库/赛狐erp调用/sellfox-mcp-query",
+      "category": "赛狐ERP调用",
       "include": ["SKILL.md"],
       "description": "Query Sellfox-MCP for scoped Amazon sales and profit data with low-token workflows.",
       "triggers": [
