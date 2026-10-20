@@ -8,13 +8,13 @@
 
 | 中文名称 | 英文目录名 | 能做什么 |
 | --- | --- | --- |
-| 技能导航 | `amazon-skill-router` | 根据你的需求选择合适的技能 |
-| 评论分析 | `amazon-review-analysis` | 分析买家评论，统计产品优缺点、出现频次和改进建议 |
-| Listing 全流程 | `amazon-listing-workflow` | 整理资料、分析竞品和关键词，生成标题、五点、长描述、QA、后台搜索词（ST），检查文案并衔接图片策划 |
-| 变体规划 | `amazon-variant-planning` | 整理父体和 MSKU 的颜色、尺寸等属性，检查重复与冲突，将文案绑定到对应变体 |
-| 九图策划 | `amazon-image-planning` | 规划九张产品图的内容、构图、素材和中英上图文案，交付独立 HTML 方案 |
-| 图片生成（可选） | `amazon-image-generation` | 根据产品资料和图片方案，按需生成 Listing 图片或 A+ 图片 |
-| 赛狐 ERP 调用 | `sellfox-mcp-query` | 通过 Sellfox-MCP 查询销售、毛利润、订单、MSKU、广告、库存等数据，按需精简返回结果 |
+| 技能导航 | [amazon-skill-router](amazon-skill-router/) | 根据你的需求选择合适的技能 |
+| 评论分析 | [amazon-review-analysis](skills/amazon-review-analysis/) | 分析买家评论，统计产品优缺点、出现频次和改进建议 |
+| Listing 全流程 | [amazon-listing-workflow](skills/amazon-listing-workflow/) | 整理资料、分析竞品和关键词，生成标题、五点、长描述、QA、后台搜索词（ST），检查文案并衔接图片策划 |
+| 变体规划 | [amazon-variant-planning](skills/amazon-variant-planning/) | 整理父体和 MSKU 的颜色、尺寸等属性，检查重复与冲突，将文案绑定到对应变体 |
+| 九图策划 | [amazon-image-planning](skills/amazon-image-planning/) | 规划九张产品图的内容、构图、素材和中英上图文案，交付独立 HTML 方案 |
+| 图片生成（可选） | [amazon-image-generation](skills/amazon-image-generation/) | 根据产品资料和图片方案，按需生成 Listing 图片或 A+ 图片 |
+| 赛狐 ERP 调用 | [sellfox-mcp-query](skills/sellfox-mcp-query/) | 通过 Sellfox-MCP 查询销售、毛利润、订单、MSKU、广告、库存等数据，按需精简返回结果 |
 
 完整 Listing 流程：
 
