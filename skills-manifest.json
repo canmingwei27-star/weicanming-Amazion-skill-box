@@ -18,6 +18,42 @@
   },
   "skills": [
     {
+      "name": "amazon-listing-workflow",
+      "path": "skill库/Listing/amazon-listing-workflow",
+      "category": "Listing",
+      "include": ["SKILL.md", "references", "scripts", "agents"],
+      "description": "Run the Amazon Listing workflow from intake through copy QA and image planning.",
+      "triggers": ["Amazon Listing", "Listing全流程", "标题五点描述QA", "亚马逊Listing"],
+      "excludes": ["Image generation alone"]
+    },
+    {
+      "name": "amazon-variant-planning",
+      "path": "skill库/Listing/amazon-variant-planning",
+      "category": "Listing",
+      "include": ["SKILL.md", "references", "scripts", "agents"],
+      "description": "Normalize Amazon product variants and bind facts to parent SKUs and MSKUs.",
+      "triggers": ["亚马逊变体", "变体表", "父体子体", "MSKU变体"],
+      "excludes": []
+    },
+    {
+      "name": "amazon-image-planning",
+      "path": "skill库/Listing/amazon-image-planning",
+      "category": "Listing",
+      "include": ["SKILL.md", "references", "assets", "agents"],
+      "description": "Create a fact-grounded nine-image Amazon listing plan without generating images.",
+      "triggers": ["九图策划", "亚马逊图片策划", "Listing图片方案"],
+      "excludes": ["Direct image generation"]
+    },
+    {
+      "name": "amazon-image-planner",
+      "path": "skill库/图片/amazon-image-planner",
+      "category": "图片生成",
+      "include": ["SKILL.md", "references", "agents"],
+      "description": "Generate or plan Amazon listing and A+ images after copy and image planning are complete.",
+      "triggers": ["生成亚马逊图片", "生成Listing图片", "生成A+图片", "图片生成"],
+      "excludes": ["Text-only nine-image planning"]
+    },
+    {
       "name": "sellfox-mcp-query",
       "path": "skill库/销售与利润/sellfox-mcp-query",
       "category": "销售与利润",

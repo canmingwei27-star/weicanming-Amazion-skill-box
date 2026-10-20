@@ -1,0 +1,3 @@
+interface:
+  display_name: "亚马逊九图策划"
+  short_description: "根据已有Listing和变体资料独立输出九张产品图的文本策划"
