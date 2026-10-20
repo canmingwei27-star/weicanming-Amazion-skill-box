@@ -18,6 +18,24 @@
   },
   "skills": [
     {
+      "name": "sellfox-mcp-query",
+      "path": "skill库/销售与利润/sellfox-mcp-query",
+      "category": "销售与利润",
+      "include": ["SKILL.md"],
+      "description": "Query Sellfox-MCP for scoped Amazon sales and profit data with low-token workflows.",
+      "triggers": [
+        "Sellfox-MCP",
+        "赛狐",
+        "销售额和利润",
+        "利润报表",
+        "MSKU销售明细",
+        "未结算利润"
+      ],
+      "excludes": [
+        "Non-Amazon platforms unless explicitly requested"
+      ]
+    },
+    {
       "name": "amazon-review-analysis",
       "path": "skill库/评论分析/amazon-review-analysis",
       "category": "评论分析",
